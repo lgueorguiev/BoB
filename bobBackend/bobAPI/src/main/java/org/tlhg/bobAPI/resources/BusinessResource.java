@@ -23,7 +23,10 @@ public class BusinessResource {
 		ResultSet ret = req.restRequest(t);
 		
 		JSONArray arr = rsConverter(ret);
-		return Response.status(200).type("application/json").entity(arr.toString(4))
+		JSONObject obj = new JSONObject();
+		obj.put("businesses", arr);
+		
+		return Response.status(200).type("application/json").entity(obj.toString(4))
 				.header("Access-Control-Allow-Origin", "*").build();
 	}
 	
