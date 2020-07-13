@@ -43,27 +43,13 @@ public class AzureDbRequest {
 		}
 	}
 	
-	public ResultSet restRequest(String t) throws SQLException {
-		try {
-			Statement statement = connection.createStatement();
-			String query = "SELECT * FROM test WHERE tag = \'" + t + "';";
-			ResultSet results = statement.executeQuery(query);
-			return results;
-		}
-		catch (SQLException e) {
-			throw new SQLException("Encountered an error when executing given sql statement.", e);
-		}
-	}
-	
-	/**
-	 * Works with a list of tags
 	public ResultSet restRequest(String[] tags) throws SQLException {
 		try {
 			Statement statement = connection.createStatement();
 			
-			String query = "SELECT * FROM businesses WHERE (tag = " + tags[0] + ")";
-			for(int i = 1; i < tags.length - 1; i++) {
-				query += "OR (tag = " + tags[i] + ")";
+			String query = "SELECT * FROM test WHERE (tag = \'" + tags[0] + "\')";
+			for(int i = 1; i < tags.length; i++) {
+				query += "OR (tag = \'" + tags[i] + "\')";
 			}
 			
 			query += ";";
@@ -76,5 +62,5 @@ public class AzureDbRequest {
 			throw new SQLException("Encountered an error when executing given sql statement.", e);
 		}
 	}
-	**/
+
 }
