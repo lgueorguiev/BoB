@@ -3,10 +3,10 @@ package org.tlhg.bobAPI;
 import java.sql.*;
 import java.util.Properties;
 
-public class AzureDbRequest {
+public class DbRequest {
 	private Connection connection;
 	
-	public AzureDbRequest() throws ClassNotFoundException, SQLException {
+	public DbRequest() throws ClassNotFoundException, SQLException {
 		// Initialize connection variables.
 		String host = Config.getParam("HOST");
 		String database = Config.getParam("DATABASE");
@@ -43,16 +43,28 @@ public class AzureDbRequest {
 		}
 	}
 	
-	public ResultSet restRequest(String[] tags) throws SQLException {
+	public ResultSet restRequest(String city, String[] tags) throws SQLException {
 		try {
 			Statement statement = connection.createStatement();
 			
-			String query = "SELECT * FROM test WHERE (tag = \'" + tags[0] + "\')";
-			for(int i = 1; i < tags.length; i++) {
-				query += "OR (tag = \'" + tags[i] + "\')";
-			}
+			String query = "";
+			String filtered_add = "WITH filtered_add AS (SELECT * FROM addresses WHERE city = \'" + city + "\')";
 			
-			query += ";";
+			if (tags.length == 0) {
+				query = filtered_add + "\nSELECT * FROM filtered_add JOIN businesses ON filtered_add.business_id = businesses.id;";
+			}
+			else {
+				filtered_add += ",\n";
+				String filtered_bus = "filtered_bus AS (SELECT * FROM businesses WHERE (tag = \'" + tags[0] + "\')";
+				
+				for(int i = 1; i < tags.length; i++) {
+					filtered_bus += "OR (tag = \'" + tags[i] + "\')";
+				}
+				
+				filtered_bus += ")";
+				
+				query = filtered_add + filtered_bus + "\nSELECT * FROM filtered_add JOIN filtered_bus ON filtered_add.business_id = filtered_bus.id;";
+			}
 			
 			ResultSet results = statement.executeQuery(query);
 			
