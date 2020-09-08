@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "react-bootstrap/Navbar";
+import Location from "./Location.js";
 
 class App extends Component {
   render() {
@@ -9,7 +10,7 @@ class App extends Component {
           <Navbar.Brand>Black Owned Businesses</Navbar.Brand>
         </Navbar>
         <div class="Body">
-          <h1>Hello World</h1>
+          <Location />
         </div>
       </div>
     );
